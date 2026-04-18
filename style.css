@@ -1,0 +1,1276 @@
+:root {
+  color-scheme: light;
+  --bg: #ece6db;
+  --surface: rgba(255, 251, 245, 0.92);
+  --surface-strong: #fffaf2;
+  --surface-soft: #e4dac7;
+  --text: #182126;
+  --muted: #58636d;
+  --primary: #0f766e;
+  --primary-strong: #0a5b55;
+  --accent: #d7a65a;
+  --border: rgba(24, 33, 38, 0.16);
+  --shadow: 0 20px 50px rgba(14, 30, 37, 0.16);
+  --hero-overlay: linear-gradient(135deg, rgba(15, 118, 110, 0.88), rgba(8, 44, 52, 0.8));
+}
+
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #05090c;
+  --surface: rgba(15, 24, 29, 0.92);
+  --surface-strong: #101b20;
+  --surface-soft: #13252c;
+  --text: #edf4f5;
+  --muted: #aab8bc;
+  --primary: #69d1c7;
+  --primary-strong: #8de6dd;
+  --accent: #f3c980;
+  --border: rgba(237, 244, 245, 0.08);
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  --hero-overlay: linear-gradient(135deg, rgba(10, 27, 32, 0.92), rgba(9, 73, 82, 0.78));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.transition-pending body > *:not(.page-transition-overlay) {
+  opacity: 0;
+}
+
+html.transition-pending body {
+  overflow: hidden;
+}
+
+html.transition-pending body .page-transition-overlay {
+  display: flex;
+}
+
+html.transition-pending[data-pending-transition="home"] body .page-transition-curtain {
+  opacity: 1;
+  clip-path: circle(155% at 72px 72px);
+}
+
+html.transition-pending[data-pending-transition="form"] body .page-transition-curtain {
+  opacity: 1;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(circle at top left, rgba(215, 166, 90, 0.24), transparent 28%),
+    linear-gradient(180deg, rgba(15, 118, 110, 0.09), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body[data-theme="dark"] {
+  background:
+    radial-gradient(circle at top left, rgba(105, 209, 199, 0.08), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(243, 201, 128, 0.06), transparent 22%),
+    linear-gradient(180deg, rgba(8, 24, 29, 0.4), transparent 26%),
+    var(--bg);
+}
+
+.startup-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(215, 166, 90, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(15, 118, 110, 0.1), transparent 34%),
+    var(--bg);
+  z-index: 1100;
+  pointer-events: none;
+}
+
+body[data-theme="dark"] .startup-overlay {
+  background:
+    radial-gradient(circle at top left, rgba(105, 209, 199, 0.14), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(243, 201, 128, 0.08), transparent 22%),
+    linear-gradient(180deg, rgba(8, 24, 29, 0.55), transparent 28%),
+    var(--bg);
+}
+
+body.splash-active .startup-overlay {
+  display: flex;
+}
+
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1080;
+  pointer-events: none;
+}
+
+body.form-atmenet-active .page-transition-overlay,
+body.home-atmenet-active .page-transition-overlay {
+  display: flex;
+}
+
+.page-transition-curtain {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(circle at top left, rgba(215, 166, 90, 0.26), transparent 24%),
+    linear-gradient(180deg, rgba(15, 118, 110, 0.16), transparent 34%),
+    var(--bg);
+}
+
+body[data-theme="dark"] .page-transition-curtain {
+  background:
+    radial-gradient(circle at top left, rgba(105, 209, 199, 0.18), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(243, 201, 128, 0.08), transparent 20%),
+    linear-gradient(180deg, rgba(10, 24, 29, 0.82), rgba(5, 9, 12, 0.96)),
+    var(--bg);
+}
+
+.page-transition-brand {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--primary);
+  opacity: 0;
+  text-align: center;
+}
+
+.page-transition-brand strong {
+  font-size: clamp(34px, 5vw, 62px);
+  line-height: 0.95;
+}
+
+.page-transition-brand span {
+  margin-top: 10px;
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--muted);
+  opacity: 1;
+}
+
+.page-transition-cards {
+  position: absolute;
+  left: 50%;
+  bottom: 12vh;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 220px));
+  gap: 18px;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.page-transition-card {
+  height: 96px;
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow);
+}
+
+.page-transition-card.nagy {
+  grid-column: 1 / -1;
+  height: 140px;
+  background:
+    linear-gradient(135deg, rgba(115, 181, 185, 0.26), rgba(230, 213, 177, 0.32)),
+    rgba(255, 255, 255, 0.82);
+}
+
+body[data-theme="dark"] .page-transition-card {
+  background: rgba(18, 32, 40, 0.92);
+}
+
+body[data-theme="dark"] .page-transition-card.nagy {
+  background:
+    linear-gradient(135deg, rgba(48, 128, 136, 0.34), rgba(19, 57, 64, 0.42)),
+    rgba(18, 32, 40, 0.96);
+}
+
+.startup-mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 24px 30px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  overflow: visible;
+}
+
+body[data-theme="dark"] .startup-mark {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.splash-active .startup-mark {
+  animation: startup-morph 1.65s cubic-bezier(0.7, 0, 0.18, 1) both;
+}
+
+.startup-logo {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+body.splash-active .startup-logo {
+  animation: startup-logo-flow 1.65s cubic-bezier(0.7, 0, 0.18, 1) both;
+}
+
+.startup-szoveg {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  color: var(--primary);
+}
+
+.startup-szoveg strong {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 0.95;
+}
+
+.startup-szoveg span {
+  margin-top: 8px;
+  font-size: clamp(16px, 2vw, 24px);
+  color: var(--muted);
+}
+
+body.splash-active .startup-szoveg {
+  animation: startup-text-flow 1.65s cubic-bezier(0.7, 0, 0.18, 1) both;
+}
+
+.startup-folyadek {
+  position: absolute;
+  inset: -20%;
+  z-index: 1;
+  opacity: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 50%, rgba(105, 209, 199, 0.75), transparent 26%),
+    radial-gradient(circle at 60% 50%, rgba(243, 201, 128, 0.65), transparent 22%),
+    linear-gradient(90deg, rgba(105, 209, 199, 0.2), rgba(243, 201, 128, 0.18));
+  filter: blur(18px);
+  transform: scaleX(0.6) scaleY(0.6);
+}
+
+body.splash-active .startup-folyadek {
+  animation: startup-liquid 1.65s cubic-bezier(0.7, 0, 0.18, 1) both;
+}
+
+body.form-atmenet-active .page-transition-curtain {
+  animation: form-curtain 0.98s cubic-bezier(0.58, 0, 0.2, 1) both;
+}
+
+body.form-atmenet-active .page-transition-brand {
+  animation: form-brand 0.98s cubic-bezier(0.58, 0, 0.2, 1) both;
+}
+
+body.form-atmenet-active .page-transition-brand span {
+  animation: form-subtitle 0.98s cubic-bezier(0.58, 0, 0.2, 1) both;
+}
+
+body.form-atmenet-active .page-transition-cards {
+  animation: form-cards 0.98s cubic-bezier(0.58, 0, 0.2, 1) both;
+}
+
+body.home-atmenet-active .page-transition-curtain {
+  animation: home-curtain 1.08s cubic-bezier(0.68, 0, 0.2, 1) both;
+}
+
+body.home-atmenet-active .page-transition-brand {
+  align-items: flex-start;
+  transform-origin: top left;
+  animation: home-brand 1.08s cubic-bezier(0.68, 0, 0.2, 1) both;
+}
+
+body.home-atmenet-active .page-transition-brand span {
+  animation: home-subtitle 1.08s cubic-bezier(0.68, 0, 0.2, 1) both;
+}
+
+body.home-atmenet-active .page-transition-cards {
+  animation: home-cards 1.08s cubic-bezier(0.68, 0, 0.2, 1) both;
+}
+
+body.form-atmenet-active .urlap-oldal {
+  animation: urlap-erkezes 0.92s cubic-bezier(0.22, 0.9, 0.2, 1) both;
+}
+
+body.home-atmenet-active .hero {
+  animation: fooldal-erkezes-hero 1.02s cubic-bezier(0.22, 0.9, 0.2, 1) both;
+}
+
+body.home-atmenet-active .oldal-tartalom > section,
+body.home-atmenet-active .lablec {
+  animation: fooldal-erkezes-szakasz 0.92s cubic-bezier(0.22, 0.9, 0.2, 1) both;
+}
+
+body.home-atmenet-active .oldal-tartalom > section:nth-of-type(1) {
+  animation-delay: 0.08s;
+}
+
+body.home-atmenet-active .oldal-tartalom > section:nth-of-type(2) {
+  animation-delay: 0.14s;
+}
+
+body.home-atmenet-active .oldal-tartalom > section:nth-of-type(3) {
+  animation-delay: 0.2s;
+}
+
+body.home-atmenet-active .oldal-tartalom > section:nth-of-type(4),
+body.home-atmenet-active .lablec {
+  animation-delay: 0.26s;
+}
+
+body.tema-csere-active .navbar,
+body.tema-csere-active .hero,
+body.tema-csere-active .urlap-oldal,
+body.tema-csere-active .doboz,
+body.tema-csere-active .lablec {
+  animation: tema-csere-lendulet 0.72s ease both;
+}
+
+a {
+  color: inherit;
+}
+
+.tema-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(5, 12, 15, 0.72);
+  z-index: 1000;
+}
+
+.tema-modal.nyitva {
+  display: flex;
+}
+
+.tema-modal.nyitva .tema-panel {
+  animation: tema-panel-nyitas 0.68s cubic-bezier(0.22, 0.9, 0.2, 1) both;
+}
+
+.tema-modal.nyitva .tema-elozet {
+  animation: tema-preview-nyitas 0.86s cubic-bezier(0.22, 0.9, 0.2, 1) both;
+}
+
+.tema-modal.nyitva .tema-gombok,
+.tema-modal.nyitva .tema-megerosites {
+  animation: tema-gombok-nyitas 0.72s ease both;
+  animation-delay: 0.08s;
+}
+
+.tema-panel {
+  max-width: 560px;
+  width: 100%;
+  padding: 32px;
+  border-radius: 24px;
+  background: var(--surface-strong);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.tema-elozet {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 248, 238, 0.98), rgba(232, 224, 207, 0.98));
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+body[data-theme="dark"] .tema-elozet {
+  background: linear-gradient(180deg, rgba(18, 31, 37, 0.98), rgba(9, 17, 22, 0.98));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.tema-elozet-fejlec {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.tema-elozet-logo-kep {
+  width: min(100%, 220px);
+  display: block;
+  filter: drop-shadow(0 10px 22px rgba(15, 118, 110, 0.16));
+}
+
+.tema-elozet-tartalom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tema-elozet-sor {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tema-elozet-kartya {
+  height: 72px;
+  border-radius: 18px;
+  background: #fffdf9;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 18px rgba(24, 33, 38, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+}
+
+body[data-theme="dark"] .tema-elozet-kartya {
+  background: #122028;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.tema-elozet-kartya.nagy {
+  height: 120px;
+  background:
+    linear-gradient(135deg, rgba(115, 181, 185, 0.3), rgba(230, 213, 177, 0.34)),
+    #fffdf9;
+}
+
+.tema-elozet-kartya span {
+  color: var(--primary-strong);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tema-elozet-kartya.nagy span {
+  font-size: clamp(26px, 4vw, 42px);
+}
+
+.tema-elozet-sor .tema-elozet-kartya span {
+  font-size: clamp(18px, 2.5vw, 28px);
+}
+
+body[data-theme="dark"] .tema-elozet-kartya.nagy {
+  background:
+    linear-gradient(135deg, rgba(48, 128, 136, 0.32), rgba(19, 57, 64, 0.46)),
+    #122028;
+}
+
+.tema-felirat,
+.szekcio-felirat,
+.hero-felirat {
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.tema-gombok,
+.hero-akciok,
+.nav-muveletek {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.tema-gombok {
+  justify-content: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.tema-valaszto,
+.tema-toggle,
+.gomb,
+.tema-megerosites {
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.tema-valaszto,
+.tema-toggle {
+  padding: 12px 18px;
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+.tema-valaszto.aktiv {
+  outline: 2px solid var(--primary);
+  background: rgba(15, 118, 110, 0.16);
+}
+
+.tema-megerosites {
+  margin-top: 18px;
+  padding: 14px 22px;
+  background: var(--accent);
+  color: #172126;
+}
+
+.tema-valaszto:hover,
+.tema-toggle:hover,
+.gomb:hover,
+.tema-megerosites:hover {
+  transform: translateY(-1px);
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 40px;
+  background: rgba(255, 250, 243, 0.84);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+
+body[data-theme="dark"] .navbar {
+  background: rgba(11, 20, 24, 0.78);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--primary);
+  text-decoration: none;
+  overflow: hidden;
+  max-width: 72px;
+  transition: max-width 0.35s ease;
+}
+
+.logo:hover,
+.logo:focus-visible {
+  max-width: 260px;
+}
+
+.logo-jelolo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.logo-kep {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-szoveg {
+  display: inline-block;
+  padding-left: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-16px);
+  transition: opacity 0.28s ease, transform 0.35s ease;
+}
+
+.logo:hover .logo-szoveg,
+.logo:focus-visible .logo-szoveg {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.menu {
+  list-style: none;
+  display: flex;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+}
+
+.menu a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.hero {
+  min-height: 88vh;
+  padding: 110px 24px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    var(--hero-overlay),
+    url("https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+}
+
+.hero-content {
+  max-width: 1100px;
+  width: 100%;
+}
+
+.hero h1 {
+  max-width: 760px;
+  margin: 0 0 20px;
+  font-size: clamp(42px, 7vw, 78px);
+  line-height: 1.02;
+}
+
+.hero-lead {
+  max-width: 700px;
+  margin: 0 0 32px;
+  font-size: 20px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.gomb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+}
+
+.fo-gomb {
+  background: var(--accent);
+  color: #172126;
+}
+
+.mellek-gomb {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.hero-statisztikak {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-kartya,
+.kartya,
+.kiemelt-kartya,
+.kapcsolat-kartya,
+.doboz {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.stat-kartya {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.stat-kartya strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.stat-kartya span {
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.5;
+}
+
+main {
+  padding: 40px 24px 80px;
+}
+
+.doboz {
+  max-width: 1120px;
+  margin: 0 auto 28px;
+  padding: 38px;
+  border-radius: 28px;
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+}
+
+.szekcio-fejlec h1,
+.szekcio-fejlec h2 {
+  margin: 0 0 18px;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.08;
+}
+
+.ketoszlopos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 18px;
+}
+
+.kartya-kontener,
+.kiemelt-racs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.kartya,
+.kiemelt-kartya,
+.kapcsolat-kartya {
+  padding: 24px;
+  border-radius: 22px;
+  background: var(--surface-strong);
+}
+
+.kartya h3,
+.kiemelt-kartya h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--primary);
+}
+
+.kartya p,
+.kiemelt-kartya p,
+.kapcsolat-kartya p,
+.urlap-oldal p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.kapcsolat-blokk {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.kapcsolat-urlap {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kapcsolat-urlap input,
+.kapcsolat-urlap textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font: inherit;
+  background: var(--surface-strong);
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.kapcsolat-urlap textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.mezo-megjegyzes {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.megerosites-megjegyzes {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(15, 118, 110, 0.12);
+  color: var(--primary);
+}
+
+.hiba-uzenet {
+  margin: -2px 0 0;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hiba-mezo {
+  border-color: #dc2626 !important;
+  background-color: rgba(254, 242, 242, 0.95);
+}
+
+.kuldes-gomb:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.rejtett {
+  display: none;
+}
+
+.urlap-oldal {
+  max-width: 820px;
+  margin-top: 36px;
+}
+
+.vissza-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.lablec {
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+@keyframes belepes-fel {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tema-panel-nyitas {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.94);
+    filter: blur(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes tema-preview-nyitas {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tema-gombok-nyitas {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes startup-logo-flow {
+  0% {
+    opacity: 0;
+    transform: translateX(32px) scale(0.72);
+    filter: blur(8px);
+  }
+
+  24% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+
+  54% {
+    transform: translateX(36px) scale(0.96);
+    filter: blur(0.5px);
+  }
+
+  72% {
+    transform: translateX(160px) scale(1.06, 0.82);
+    filter: blur(8px);
+    opacity: 0.95;
+  }
+
+  100% {
+    transform: translateX(340px) scale(1.18, 0.58);
+    filter: blur(22px);
+    opacity: 0;
+  }
+}
+
+@keyframes startup-text-flow {
+  0% {
+    opacity: 0;
+    transform: translateX(-28px) scale(0.94);
+    filter: blur(10px);
+  }
+
+  24% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+
+  50% {
+    transform: translateX(-26px) scale(0.98);
+  }
+
+  72% {
+    transform: translateX(-120px) scale(1.1, 0.82);
+    filter: blur(10px);
+    opacity: 0.96;
+  }
+
+  100% {
+    transform: translateX(-300px) scale(1.22, 0.56);
+    filter: blur(24px);
+    opacity: 0;
+  }
+}
+
+@keyframes startup-liquid {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.5) scaleY(0.5);
+  }
+
+  30% {
+    opacity: 0.2;
+    transform: scaleX(0.82) scaleY(0.76);
+  }
+
+  56% {
+    opacity: 0.9;
+    transform: scaleX(1.12) scaleY(0.98);
+  }
+
+  78% {
+    opacity: 0.95;
+    transform: scaleX(4.2) scaleY(0.48);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleX(8.2) scaleY(0.22);
+  }
+}
+
+@keyframes startup-morph {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(10px);
+  }
+
+  18% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+
+  56% {
+    opacity: 1;
+    transform: scale(1.02);
+    filter: blur(0);
+  }
+
+  82% {
+    opacity: 0.9;
+    transform: scale(1.08, 0.82);
+    filter: blur(12px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.2, 0.62);
+    filter: blur(24px);
+  }
+}
+
+@keyframes form-curtain {
+  0% {
+    opacity: 0;
+    transform: translateY(8%) scale(1.02);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-4%) scale(1);
+  }
+}
+
+@keyframes form-brand {
+  0% {
+    opacity: 0;
+    transform: translateY(38px) scale(0.96);
+    filter: blur(10px);
+  }
+
+  32% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-22px) scale(1.02);
+    filter: blur(12px);
+  }
+}
+
+@keyframes form-subtitle {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(8px);
+  }
+
+  38% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+    filter: blur(8px);
+  }
+}
+
+@keyframes form-cards {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(80px) scale(0.92);
+    filter: blur(12px);
+  }
+
+  28% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-30px) scale(0.98);
+    filter: blur(12px);
+  }
+}
+
+@keyframes home-curtain {
+  0% {
+    opacity: 0;
+    clip-path: circle(0 at 72px 72px);
+  }
+
+  28% {
+    opacity: 1;
+  }
+
+  72% {
+    opacity: 1;
+    clip-path: circle(155% at 72px 72px);
+  }
+
+  100% {
+    opacity: 0;
+    clip-path: circle(170% at 72px 72px);
+  }
+}
+
+@keyframes home-brand {
+  0% {
+    opacity: 0;
+    transform: translate(-240px, -180px) scale(0.48);
+    filter: blur(10px);
+  }
+
+  34% {
+    opacity: 1;
+    transform: translate(-180px, -110px) scale(0.78);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-90px, -40px) scale(1);
+    filter: blur(10px);
+  }
+}
+
+@keyframes home-subtitle {
+  0% {
+    opacity: 0;
+    transform: translate(-220px, -150px) scale(0.56);
+    filter: blur(8px);
+  }
+
+  34% {
+    opacity: 1;
+    transform: translate(-166px, -92px) scale(0.82);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-82px, -30px) scale(1);
+    filter: blur(8px);
+  }
+}
+
+@keyframes home-cards {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(40px) scale(0.94);
+  }
+
+  20% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-80px) scale(0.82);
+    filter: blur(16px);
+  }
+}
+
+@keyframes urlap-erkezes {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    filter: blur(10px);
+  }
+
+  55% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.01);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes fooldal-erkezes-hero {
+  0% {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+    filter: blur(10px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.01);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes fooldal-erkezes-szakasz {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.985);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes tema-csere-lendulet {
+  0% {
+    transform: scale(1);
+    filter: saturate(0.92) brightness(0.96);
+  }
+
+  40% {
+    transform: scale(1.01);
+    filter: saturate(1.08) brightness(1.04);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar,
+  .nav-muveletek,
+  .hero-akciok,
+  .tema-gombok,
+  .menu,
+  .kapcsolat-blokk,
+  .ketoszlopos,
+  .kartya-kontener,
+  .kiemelt-racs,
+  .hero-statisztikak {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar {
+    padding: 20px;
+  }
+
+  .menu {
+    gap: 14px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 90px;
+  }
+
+  .doboz {
+    padding: 28px 22px;
+  }
+}

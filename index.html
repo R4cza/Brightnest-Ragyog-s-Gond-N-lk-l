@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brightnest - Ajánlatkérés</title>
+  <script>
+    (function () {
+      try {
+        var pendingTransition = sessionStorage.getItem("brightnest-page-transition");
+        if (pendingTransition === "home" || pendingTransition === "form") {
+          document.documentElement.classList.add("transition-pending");
+          document.documentElement.setAttribute("data-pending-transition", pendingTransition);
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <style>
+    html.transition-pending body > *:not(.page-transition-overlay) { opacity: 0 !important; }
+    html.transition-pending body { overflow: hidden; }
+    html.transition-pending body .page-transition-overlay { display: flex !important; }
+    html.transition-pending[data-pending-transition="home"] body .page-transition-curtain {
+      opacity: 1 !important;
+      clip-path: circle(155% at 72px 72px);
+    }
+    html.transition-pending[data-pending-transition="form"] body .page-transition-curtain { opacity: 1 !important; }
+  </style>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="tema-modal" id="temaModal" aria-hidden="true">
+    <div class="tema-panel">
+      <p class="tema-felirat">Üdv a Brightnest oldalán</p>
+      <h2>Válassz megjelenést</h2>
+      <p>Beállíthatod, hogy világos vagy sötét témában szeretnéd használni az oldalt.</p>
+      <div class="tema-elozet">
+        <div class="tema-elozet-fejlec">
+          <img src="../logo-transparent-trimmed.png" alt="BrightNest logó" class="tema-elozet-logo-kep">
+        </div>
+        <div class="tema-elozet-tartalom">
+          <div class="tema-elozet-kartya nagy">
+            <span>Brightnest</span>
+          </div>
+          <div class="tema-elozet-sor">
+            <div class="tema-elozet-kartya">
+              <span>Ragyogás</span>
+            </div>
+            <div class="tema-elozet-kartya">
+              <span>gond nélkül</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tema-gombok">
+        <button type="button" class="tema-valaszto" data-theme-choice="light">Világos téma</button>
+        <button type="button" class="tema-valaszto" data-theme-choice="dark">Sötét téma</button>
+      </div>
+      <button type="button" class="tema-megerosites" id="temaMegerosit">Megerősítés</button>
+    </div>
+  </div>
+
+  <div class="startup-overlay" id="startupOverlay" aria-hidden="true">
+    <div class="startup-mark">
+      <img src="../logo-transparent-trimmed.png" alt="BrightNest logó" class="startup-logo">
+      <div class="startup-szoveg">
+        <strong>Brightnest</strong>
+        <span>Ragyogás - gond nélkül</span>
+      </div>
+      <div class="startup-folyadek"></div>
+    </div>
+  </div>
+
+  <div class="page-transition-overlay" id="pageTransitionOverlay" aria-hidden="true">
+    <div class="page-transition-curtain"></div>
+    <div class="page-transition-brand">
+      <strong>Brightnest</strong>
+      <span>Ragyogás - gond nélkül</span>
+    </div>
+    <div class="page-transition-cards">
+      <div class="page-transition-card nagy"></div>
+      <div class="page-transition-card"></div>
+      <div class="page-transition-card"></div>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a href="../index.html" class="logo" data-transition="home">
+      <span class="logo-jelolo">
+        <img src="../logo-transparent-trimmed.png" alt="BrightNest logó" class="logo-kep">
+      </span>
+      <span class="logo-szoveg">Brightnest</span>
+    </a>
+    <div class="nav-muveletek">
+      <ul class="menu">
+        <li><a href="../index.html" data-transition="home">Főoldal</a></li>
+        <li><a href="#urlap">Űrlap</a></li>
+      </ul>
+      <button type="button" class="tema-toggle" id="temaToggle">Téma váltása</button>
+    </div>
+  </nav>
+
+  <section id="urlap" class="doboz urlap-oldal oldal-tartalom">
+    <div class="szekcio-fejlec">
+      <p class="szekcio-felirat">Ajánlatkérés</p>
+      <h1>Mondd el, miben segíthet a Brightnest</h1>
+    </div>
+    <p>Töltsd ki az űrlapot, és a Brightnest hamarosan felveszi veled a kapcsolatot.</p>
+    <p class="megerosites-megjegyzes">Az űrlap a Brightnest Formspree fiókjához kapcsolódik, így a beküldések közvetlenül oda érkeznek.</p>
+
+    <form
+      class="kapcsolat-urlap"
+      id="kapcsolatUrlap"
+      action="https://formspree.io/f/mkokobqr"
+      method="POST"
+      novalidate
+    >
+      <label for="nev">Név <span class="mezo-megjegyzes">* opcionális</span></label>
+      <input type="text" id="nev" name="nev" placeholder="Írd be a neved" spellcheck="false">
+
+      <label for="email">Email cím</label>
+      <input type="email" id="email" name="email" placeholder="Írd be az emailed" spellcheck="false">
+      <p class="hiba-uzenet rejtett" id="emailHiba">Az email címet ki kell tölteni.</p>
+
+      <label for="uzenet">Üzenet <span class="mezo-megjegyzes">* opcionális</span></label>
+      <textarea id="uzenet" name="message" rows="5" placeholder="Írd le, miben segíthetünk" spellcheck="false"></textarea>
+
+      <input type="hidden" name="_subject" value="Brightnest ajánlatkérés">
+
+      <button type="submit" class="gomb fo-gomb kuldes-gomb" id="kuldesGomb">Üzenet küldése</button>
+    </form>
+
+    <a href="../index.html" class="vissza-link" data-transition="home">Vissza a főoldalra</a>
+  </section>
+
+  <script src="../script.js"></script>
+</body>
+</html>
